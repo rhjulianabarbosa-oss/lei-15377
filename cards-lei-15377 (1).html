@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cards Saúde Preventiva — Lei 15.377/2026</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #F4F3EF;
+      color: #1a1a18;
+      min-height: 100vh;
+      padding: 32px 16px 60px;
+    }
+
+    .page-header { max-width: 780px; margin: 0 auto 28px; }
+    .page-header h1 { font-size: 24px; font-weight: 700; color: #1a1a18; margin-bottom: 6px; }
+    .page-header p { font-size: 14px; color: #5f5e5a; line-height: 1.6; }
+
+    .container { max-width: 780px; margin: 0 auto; display: flex; flex-direction: column; gap: 22px; }
+
+    .config-panel {
+      background: white; border: 1px solid #e0dfd8;
+      border-radius: 16px; padding: 22px 26px;
+    }
+    .config-panel h2 { font-size: 12px; font-weight: 700; color: #888780; margin-bottom: 16px; text-transform: uppercase; letter-spacing: 0.07em; }
+    .config-row { display: flex; flex-wrap: wrap; gap: 14px; align-items: flex-end; }
+    .config-field { display: flex; flex-direction: column; gap: 5px; }
+    .config-field label { font-size: 11px; font-weight: 600; color: #888780; text-transform: uppercase; letter-spacing: 0.06em; }
+    .config-field input[type="text"] {
+      font-size: 14px; padding: 8px 12px; border-radius: 8px;
+      border: 1px solid #d3d1c7; background: #fafaf8; color: #1a1a18;
+      width: 220px; outline: none;
+    }
+    .config-field input[type="text"]:focus { border-color: #888; }
+    .color-group { display: flex; gap: 8px; align-items: center; }
+    .config-field input[type="color"] {
+      width: 38px; height: 36px; border-radius: 8px;
+      border: 1px solid #d3d1c7; cursor: pointer; padding: 3px; background: white;
+    }
+    .config-field select {
+      font-size: 13px; padding: 8px 11px; border-radius: 8px;
+      border: 1px solid #d3d1c7; background: #fafaf8; color: #1a1a18; cursor: pointer; outline: none;
+    }
+
+    .download-btn {
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+      width: 100%; padding: 13px 20px; border-radius: 12px;
+      font-size: 15px; font-weight: 700; color: white; border: none; cursor: pointer;
+      transition: opacity 0.15s, transform 0.1s;
+    }
+    .download-btn:hover { opacity: 0.91; }
+    .download-btn:active { transform: scale(0.99); }
+    .download-btn svg { width: 17px; height: 17px; stroke: white; fill: none; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
+    .hint { text-align: center; font-size: 12px; color: #888780; margin-top: -10px; }
+
+    .preview-label { font-size: 11px; font-weight: 700; color: #888780; text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: -6px; }
+
+    /* POSTER */
+    .poster { background: white; border-radius: 18px; overflow: hidden; border: 1px solid #e0dfd8; }
+
+    .poster-top { padding: 28px 32px 24px; display: flex; align-items: flex-start; gap: 18px; }
+    .icon-wrap {
+      width: 66px; height: 66px; border-radius: 16px;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .icon-wrap svg { width: 30px; height: 30px; stroke: white; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+
+    .top-text-block { flex: 1; }
+    .poster-eyebrow { font-size: 11px; font-weight: 700; letter-spacing: 0.09em; text-transform: uppercase; margin-bottom: 6px; }
+    .poster-title { font-size: 20px; font-weight: 700; line-height: 1.27; }
+
+    .poster-divider { height: 1px; background: rgba(0,0,0,0.055); margin: 0 32px; }
+
+    .poster-body { padding: 20px 32px 24px; display: flex; gap: 18px; }
+    .poster-body-left { flex: 1; min-width: 0; }
+    .poster-lead { font-size: 14px; line-height: 1.7; color: #5f5e5a; margin-bottom: 16px; }
+
+    .pill-list { display: flex; flex-direction: column; gap: 10px; }
+    .pill-item { display: flex; align-items: flex-start; gap: 10px; font-size: 13.5px; line-height: 1.55; color: #2c2c2a; }
+    .pill-icon {
+      width: 26px; height: 26px; border-radius: 7px;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 0px;
+    }
+    .pill-icon svg { width: 13px; height: 13px; stroke: white; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+    .poster-sidebar {
+      width: 156px; flex-shrink: 0; border-radius: 14px;
+      padding: 18px 14px;
+      display: flex; flex-direction: column;
+      justify-content: center; align-items: center; text-align: center; gap: 5px;
+    }
+    .sidebar-stat { font-weight: 700; color: white; line-height: 1.08; }
+    .sidebar-label { font-size: 12px; font-weight: 600; color: rgba(255,255,255,0.88); line-height: 1.4; }
+    .sidebar-sub { font-size: 11px; color: rgba(255,255,255,0.65); line-height: 1.4; }
+
+    .poster-footer {
+      padding: 9px 32px;
+      border-top: 1px solid rgba(0,0,0,0.05);
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .company-badge { display: flex; align-items: center; gap: 7px; }
+    .company-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+    .company-name-text { font-size: 12px; font-weight: 700; }
+    .footer-right { display: flex; flex-direction: column; align-items: flex-end; gap: 1px; }
+    .law-ref { font-size: 10px; font-weight: 500; letter-spacing: 0.03em; }
+    .card-num { font-size: 10px; }
+
+    @media print {
+      body { background: white; padding: 0; }
+      .page-header, .config-panel, .preview-label, .download-btn, .hint { display: none !important; }
+      .container { max-width: 100%; gap: 0; }
+      .cards-area { gap: 0; }
+      .poster {
+        border-radius: 0; border: none;
+        page-break-after: always; break-after: page;
+        margin: 0; min-height: 100vh;
+        display: flex; flex-direction: column; justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="page-header">
+  <h1>&#128203; Cards de Saúde Preventiva</h1>
+  <p>Personalize com o nome e cor da sua empresa e clique em <strong>Baixar PDF</strong>. Na janela que abrir, selecione "Salvar como PDF".</p>
+</div>
+
+<div class="container">
+
+  <div class="config-panel">
+    <h2>Personalize os cards</h2>
+    <div class="config-row">
+      <div class="config-field">
+        <label>Nome da empresa</label>
+        <input type="text" id="company-name" placeholder="Ex: Empresa ABC" value="Sua Empresa">
+      </div>
+      <div class="config-field">
+        <label>Saudação</label>
+        <input type="text" id="greeting" placeholder="Ex: Olá, time!" value="Olá, time!">
+      </div>
+      <div class="config-field">
+        <label>Cor da marca</label>
+        <div class="color-group">
+          <input type="color" id="main-color" value="#1D9E75">
+          <select id="color-preset">
+            <option value="#1D9E75">Verde saúde</option>
+            <option value="#185FA5">Azul corporativo</option>
+            <option value="#534AB7">Roxo institucional</option>
+            <option value="#BA7517">Âmbar</option>
+            <option value="#993556">Rosa</option>
+            <option value="#2C2C2A">Cinza escuro</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <button class="download-btn" id="download-btn" onclick="window.print()">
+    <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+    Baixar os 4 cards em PDF
+  </button>
+  <p class="hint">Na janela de impressão, selecione "Salvar como PDF" para baixar o arquivo.</p>
+
+  <p class="preview-label">Prévia dos cards</p>
+  <div class="cards-area" id="cards-area"></div>
+
+</div>
+
+<script>
+const CARDS = [
+  {
+    symbol: "&#129756;",
+    iconPath: `<path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>`,
+    eyebrow: "&#10084;&#65039; Saúde é prioridade aqui",
+    title: "Cuidar de você faz parte\nda nossa cultura",
+    lead: g => `${g} a saúde de cada pessoa aqui é uma prioridade genuína. Por isso, criamos esta série com informações que fazem diferença na sua vida — dentro e fora do trabalho.`,
+    bullets: [
+      { icon: `<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>`, text: "Saúde preventiva significa agir <strong>antes que os problemas apareçam</strong> — e tudo começa com informação." },
+      { icon: `<circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/>`, text: "Hábitos simples como vacinas e exames de rotina <strong>fazem uma diferença enorme</strong> ao longo da vida." },
+      { icon: `<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>`, text: "Quando você se cuida, <strong>toda a equipe fica mais forte.</strong> Isso é cuidado coletivo." }
+    ],
+    sidebarContent: `<div style="font-size:20px;font-weight:700;color:white;line-height:1.15;margin-bottom:6px">Prevenir<br>é sempre<br>melhor<br>do que<br>tratar</div>`,
+    sidebarSub: "",
+    lawRef: "Lei 15.377/2026 · Art. 169-A CLT",
+    num: "1 de 4"
+  },
+  {
+    symbol: "&#128137;",
+    iconPath: `<path d="M22 12h-4l-3 9L9 3l-3 9H2"/>`,
+    eyebrow: "&#128203; O que você precisa saber",
+    title: "Vacinas e exames que\nprotegem a sua vida",
+    lead: g => `${g} algumas doenças podem ser prevenidas ou tratadas com muito mais sucesso quando descobertas cedo. Conheça os temas desta série:`,
+    bullets: [
+      { icon: `<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>`, text: "<strong>&#128137; Vacinação:</strong> como se manter em dia com as vacinas recomendadas — muitas são gratuitas pelo SUS." },
+      { icon: `<circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>`, text: "<strong>&#9888;&#65039; HPV:</strong> um vírus muito comum e evitável. A vacina protege contra cânceres sérios e está disponível gratuitamente." },
+      { icon: `<path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>`, text: "<strong>&#128144; Câncer de mama e colo do útero:</strong> a detecção precoce aumenta muito as chances de cura." },
+      { icon: `<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>`, text: "<strong>&#128106; Câncer de próstata:</strong> um exame simples pode fazer toda a diferença. Não deixe para depois." }
+    ],
+    sidebarContent: `<div style="font-size:52px;font-weight:700;color:white;line-height:1;margin-bottom:6px">4</div>`,
+    sidebarLabel: "temas que\nvão cuidar\nde você",
+    sidebarSub: "nesta série",
+    lawRef: "Lei 15.377/2026 · Art. 169-A CLT",
+    num: "2 de 4"
+  },
+  {
+    symbol: "&#128197;",
+    iconPath: `<rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>`,
+    eyebrow: "&#9200;&#65039; Seu tempo, sua saúde",
+    title: "Você tem dias reservados\npara cuidar de você",
+    lead: g => `${g} sabemos que a rotina é corrida. Por isso, você pode reservar dias para fazer seus exames preventivos — sem preocupação com o trabalho.`,
+    bullets: [
+      { icon: `<rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/><path d="M8 14h.01M12 14h.01M8 18h.01M12 18h.01"/>`, text: "&#128197; Você pode se ausentar <strong>até 3 vezes por ano</strong> para realizar exames preventivos — com salário normal." },
+      { icon: `<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>`, text: "&#9989; Vale para exames de <strong>HPV, mama, colo do útero e próstata</strong> — basta apresentar o comprovante de comparecimento." },
+      { icon: `<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>`, text: "&#128172; Converse com o <strong>RH</strong> para agendar e receber orientações — estamos aqui para facilitar." },
+      { icon: `<circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/>`, text: "&#9889; Um exame hoje pode <strong>evitar um problema grande amanhã.</strong> Não adie o cuidado com a sua saúde." }
+    ],
+    sidebarContent: `<div style="font-size:60px;font-weight:700;color:white;line-height:1;margin-bottom:6px">3</div>`,
+    sidebarLabel: "dias por ano\npara seus\nexames",
+    sidebarSub: "com salário\nnormal",
+    lawRef: "Lei 15.377/2026 · Art. 473 §3º CLT",
+    num: "3 de 4"
+  },
+  {
+    symbol: "&#127973;",
+    iconPath: `<circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/>`,
+    eyebrow: "&#128218; Por onde começar",
+    title: "Acessar saúde preventiva\né mais fácil do que parece",
+    lead: g => `${g} cuidar da saúde não precisa ser complicado. Existem caminhos simples e gratuitos ao seu alcance — veja como dar o primeiro passo:`,
+    bullets: [
+      { icon: `<path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>`, text: "&#127968; <strong>UBS (Posto de Saúde):</strong> o lugar mais próximo para vacinas e exames preventivos gratuitos." },
+      { icon: `<rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/>`, text: "&#128241; <strong>App ConecteSUS:</strong> baixe no celular, veja seu cartão de vacinas e agende pelo SUS de onde estiver." },
+      { icon: `<path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>`, text: "&#128138; <strong>Plano de saúde:</strong> consulte sua operadora — exames preventivos costumam ter cobertura total." },
+      { icon: `<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>`, text: "&#129309; <strong>RH:</strong> tire dúvidas, agende sua ausência e cuide de você com todo o apoio da empresa." }
+    ],
+    sidebarContent: `<div style="font-size:19px;font-weight:700;color:white;line-height:1.2;margin-bottom:6px">Você não<br>está<br>sozinho&#10084;</div>`,
+    sidebarLabel: "conte com\na empresa\ne o RH",
+    sidebarSub: "",
+    lawRef: "Lei 15.377/2026 · Ministério da Saúde",
+    num: "4 de 4"
+  }
+];
+
+function hexToRgb(hex) {
+  return { r: parseInt(hex.slice(1,3),16), g: parseInt(hex.slice(3,5),16), b: parseInt(hex.slice(5,7),16) };
+}
+function lighten(hex, a=0.9) {
+  const {r,g,b} = hexToRgb(hex);
+  return `rgb(${Math.round(r+(255-r)*a)},${Math.round(g+(255-g)*a)},${Math.round(b+(255-b)*a)})`;
+}
+function darken(hex, a=0.3) {
+  const {r,g,b} = hexToRgb(hex);
+  return `rgb(${Math.round(r*(1-a))},${Math.round(g*(1-a))},${Math.round(b*(1-a))})`;
+}
+
+function renderCards() {
+  const company = document.getElementById('company-name').value.trim() || 'Sua Empresa';
+  const greeting = document.getElementById('greeting').value.trim() || 'Olá, time!';
+  const color = document.getElementById('main-color').value;
+  const bg = lighten(color, 0.91);
+  const dark = darken(color, 0.28);
+  const footerBg = lighten(color, 0.95);
+
+  document.getElementById('download-btn').style.background = color;
+
+  document.getElementById('cards-area').innerHTML = CARDS.map(card => {
+    const labelHtml = card.sidebarLabel
+      ? `<p class="sidebar-label">${card.sidebarLabel.replace(/\n/g,'<br>')}</p>` : '';
+    const subHtml = card.sidebarSub
+      ? `<p class="sidebar-sub">${card.sidebarSub.replace(/\n/g,'<br>')}</p>` : '';
+
+    return `
+    <div class="poster">
+      <div class="poster-top" style="background:${bg}">
+        <div class="icon-wrap" style="background:${color}">
+          <svg viewBox="0 0 24 24">${card.iconPath}</svg>
+        </div>
+        <div class="top-text-block">
+          <p class="poster-eyebrow" style="color:${dark}">${card.eyebrow}</p>
+          <p class="poster-title" style="color:${dark}">${card.title.replace('\n','<br>')}</p>
+        </div>
+      </div>
+      <div class="poster-divider"></div>
+      <div class="poster-body">
+        <div class="poster-body-left">
+          <p class="poster-lead">${card.lead(greeting)}</p>
+          <div class="pill-list">
+            ${card.bullets.map(b => `
+            <div class="pill-item">
+              <div class="pill-icon" style="background:${color}">
+                <svg viewBox="0 0 24 24">${b.icon}</svg>
+              </div>
+              <span>${b.text}</span>
+            </div>`).join('')}
+          </div>
+        </div>
+        <div class="poster-sidebar" style="background:${color}">
+          ${card.sidebarContent}
+          ${labelHtml}
+          ${subHtml}
+        </div>
+      </div>
+      <div class="poster-footer" style="background:${footerBg}">
+        <div class="company-badge">
+          <div class="company-dot" style="background:${color}"></div>
+          <span class="company-name-text" style="color:${dark}">${company}</span>
+        </div>
+        <div class="footer-right">
+          <span class="law-ref" style="color:${dark};opacity:0.45">${card.lawRef}</span>
+          <span class="card-num" style="color:${dark};opacity:0.4">${card.num}</span>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+document.getElementById('company-name').addEventListener('input', renderCards);
+document.getElementById('greeting').addEventListener('input', renderCards);
+document.getElementById('main-color').addEventListener('input', e => {
+  document.getElementById('color-preset').value = '';
+  renderCards();
+});
+document.getElementById('color-preset').addEventListener('change', e => {
+  if (e.target.value) {
+    document.getElementById('main-color').value = e.target.value;
+    renderCards();
+  }
+});
+
+renderCards();
+</script>
+
+</body>
+</html>
